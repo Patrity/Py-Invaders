@@ -3,7 +3,8 @@
  
  ##Controls:
  WASD/Arrow Keys for movement\
- Space to shoot
+ Space to shoot\
+ 1, 2, 3 to change firing mode
  
  ####Rules
  Players start with 5 lives. Every time a player receives damage from an enemy projectile or an enemy ship, a player loses 1 life.\
@@ -21,3 +22,6 @@ https://www.youtube.com/watch?v=FfWpgLFMI7w \
 Player sprite and enemy sprites were sourced from 'Flat Icon'\
 https://www.flaticon.com/ \
 All other sprites were created by myself and are free for anyone to use.
+
+##Media
+<img src="https://i.imgur.com/Pt4Vm6i.png">
