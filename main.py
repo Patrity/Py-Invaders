@@ -7,9 +7,9 @@ import math
 pygame.init()
 
 # Define the screen
-screenY = 600
-screenX = 800
-screen = pygame.display.set_mode((screenX, screenY))
+screen_y = 600
+screen_x = 800
+screen = pygame.display.set_mode((screen_x, screen_y))
 background = pygame.image.load('resources/bg.png')
 pygame.display.set_caption("Space Invaders")
 icon = pygame.image.load('resources/spaceship.png')
@@ -77,7 +77,7 @@ enemy_shot_fired = False
 
 for i in range(enemy_count):
     enemy_img.append(pygame.image.load('resources/invader.png'))
-    enemy_x.append(random.randint(0, screenX - 64))
+    enemy_x.append(random.randint(0, screen_x - 64))
     enemy_y.append(30)
     enemy_x_change.append(enemy_speed)
     enemy_y_change.append(30)
@@ -182,9 +182,9 @@ while running:
                 playerY_Change = 0
 
     # Player movement
-    if not player_x + playerX_Change >= screenX - player_sprite_dim and not player_x + playerX_Change < 0:
+    if not player_x + playerX_Change >= screen_x - player_sprite_dim and not player_x + playerX_Change < 0:
         player_x += playerX_Change
-    if not player_y + playerY_Change >= screenY - player_sprite_dim and not player_y + playerY_Change < 0:
+    if not player_y + playerY_Change >= screen_y - player_sprite_dim and not player_y + playerY_Change < 0:
         player_y += playerY_Change
 
     # Shot Movement
@@ -201,7 +201,7 @@ while running:
     if enemy_shot_fired:
         enemy_shot_y += enemy_shot_speed
         enemy_shot(enemy_shot_x, enemy_shot_y)
-        if enemy_shot_y > screenY:
+        if enemy_shot_y > screen_y:
             enemy_shot_fired = False
             player_score += 10
 
@@ -214,7 +214,7 @@ while running:
         if enemy_x[i] <= 0:
             enemy_x_change[i] = enemy_speed
             enemy_y[i] += enemy_y_change[i]
-        elif enemy_x[i] >= screenX - enemy_sprite_dim:
+        elif enemy_x[i] >= screen_x - enemy_sprite_dim:
             enemy_x_change[i] = enemy_speed * -1
             enemy_y[i] += enemy_y_change[i]
 
@@ -227,7 +227,7 @@ while running:
             shot_y = player_y
             shot_fired = False
             player_score += 100
-            enemy_x[i] = random.randint(0, screenX - 64)
+            enemy_x[i] = random.randint(0, screen_x - 64)
             enemy_y[i] = 30
 
         if playerCollided or enemyShotCollided:
