@@ -10,6 +10,7 @@
  Players start with 5 lives. Every time a player receives damage from an enemy projectile or an enemy ship, a player loses 1 life.\
  When a player successfully dodges an enemy projetile, 10 points are awarded.\
  When a player destroys an enemy ship, 100 points are awarded.
+ If an enemy ship reaches the bottom of the screen, a life is lost and 50 points are deducted.
  
  ##TODO:
  * Sprite swap for player and enemy death

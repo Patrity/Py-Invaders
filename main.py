@@ -218,6 +218,14 @@ while running:
             enemy_x_change[i] = enemy_speed * -1
             enemy_y[i] += enemy_y_change[i]
 
+        # Enemy reaches the bottom of the screen, respawn the enemy and deduct 50 points
+        if enemy_y[i] >= (screen_y - enemy_sprite_dim):
+            enemy_x[i] = random.randint(0, screen_x - 64)
+            enemy_y[i] = 30
+            player_health -= 1
+            player_score -= 50
+
+
     for i in range(enemy_count):
         # Collider Checks
         shotCollided = collision.has_collided(enemy_x[i], enemy_y[i], shot_x, shot_y)
