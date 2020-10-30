@@ -133,6 +133,17 @@ def update_health(x, y):
     screen.blit(player_health_img, (x, y))
 
 
+def respawn_enemy(index):
+    enemy_x[index] = random.randint(0, screen_x - 64)
+    enemy_y[index] = 30
+
+
+def respawn_all_enemies():
+    for index in range(enemy_count):
+        enemy_x[index] = random.randint(0, screen_x - 64)
+        enemy_y[index] = 30
+
+
 def fire_enemy_shot(i):
     if not enemy_shot_fired:
         global enemy_shot_x
@@ -235,7 +246,7 @@ while running:
             shot_y = player_y
             shot_fired = False
             player_score += 100
-            enemy_x[i] = random.randint(0, screen_x - 64)
+                respawn_enemy(i)
             enemy_y[i] = 30
 
         if playerCollided or enemyShotCollided:
@@ -249,6 +260,7 @@ while running:
                 player_health = 5
                 player_last_score = player_score
                 player_score = 0
+                    respawn_all_enemies()
 
         enemy(enemy_x[i], enemy_y[i], i)
 
