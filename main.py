@@ -5,6 +5,7 @@ import math
 
 # Init the PyGame
 pygame.init()
+game_started = False
 
 # Define the screen
 screen_y = 600
@@ -159,114 +160,124 @@ while running:
     screen.fill((0, 0, 32))
     screen.blit(background, (0, 0))
     for event in pygame.event.get():
-
         # Game exit functionality
         if event.type == pygame.QUIT:
             running = False
+        # Start Game
+        if not game_started:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                game_started = True
+        # Game Controls
+        elif game_started:
+            if event.type == pygame.KEYDOWN:
+                if event.type == pygame.K_r:
+                    game_started = False
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                    playerX_Change -= player_move_speed
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                    playerX_Change += player_move_speed
+                if event.key == pygame.K_UP or event.key == pygame.K_w:
+                    playerY_Change -= player_move_speed
+                if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                    playerY_Change += player_move_speed
+                if event.key == pygame.K_SPACE:
+                    if not shot_fired:
+                        shot_x = player_x
+                        shot_y = player_y
+                        shot(player_x, player_y)
+                if event.key == pygame.K_1:
+                    fire_mode = 1
+                if event.key == pygame.K_2:
+                    fire_mode = 2
+                if event.key == pygame.K_3:
+                    fire_mode = 3
 
-        # Keyboard controls
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                playerX_Change -= player_move_speed
-            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                playerX_Change += player_move_speed
-            if event.key == pygame.K_UP or event.key == pygame.K_w:
-                playerY_Change -= player_move_speed
-            if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                playerY_Change += player_move_speed
-            if event.key == pygame.K_SPACE:
-                if not shot_fired:
-                    shot_x = player_x
-                    shot_y = player_y
-                    shot(player_x, player_y)
-            if event.key == pygame.K_1:
-                fire_mode = 1
-            if event.key == pygame.K_2:
-                fire_mode = 2
-            if event.key == pygame.K_3:
-                fire_mode = 3
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_a or event.key == pygame.K_d:
+                    playerX_Change = 0
+                if event.key == pygame.K_UP or event.key == pygame.K_DOWN or event.key == pygame.K_w or event.key == pygame.K_s:
+                    playerY_Change = 0
 
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_a or event.key == pygame.K_d:
-                playerX_Change = 0
-            if event.key == pygame.K_UP or event.key == pygame.K_DOWN or event.key == pygame.K_w or event.key == pygame.K_s:
-                playerY_Change = 0
+    if not game_started:
+        start_text = font.render("Click Anywhere To Start!", True, (255, 255, 0))
+        screen.blit(start_text, (250, screen_y / 2 - 100))
 
-    # Player movement
-    if not player_x + playerX_Change >= screen_x - player_sprite_dim and not player_x + playerX_Change < 0:
-        player_x += playerX_Change
-    if not player_y + playerY_Change >= screen_y - player_sprite_dim and not player_y + playerY_Change < 0:
-        player_y += playerY_Change
-
-    # Shot Movement
-    if shot_fired:
-        shot_y -= shot_speed
-        shot(shot_x, shot_y)
-        if shot_y <= -20:
-            shot_fired = False
     else:
-        shot_x = player_x
-        shot_y = player_y
+        # Player movement
+        if not player_x + playerX_Change >= screen_x - player_sprite_dim and not player_x + playerX_Change < 0:
+            player_x += playerX_Change
+        if not player_y + playerY_Change >= screen_y - player_sprite_dim and not player_y + playerY_Change < 0:
+            player_y += playerY_Change
 
-    # Enemy Shot Fired
-    if enemy_shot_fired:
-        enemy_shot_y += enemy_shot_speed
-        enemy_shot(enemy_shot_x, enemy_shot_y)
-        if enemy_shot_y > screen_y:
-            enemy_shot_fired = False
-            player_score += 10
-
-    # Enemy movement
-    for i in range(enemy_count):
-        if random.randint(1, 100) > 90:
-            fire_enemy_shot(i)
-
-        enemy_x[i] += enemy_x_change[i]
-        if enemy_x[i] <= 0:
-            enemy_x_change[i] = enemy_speed
-            enemy_y[i] += enemy_y_change[i]
-        elif enemy_x[i] >= screen_x - enemy_sprite_dim:
-            enemy_x_change[i] = enemy_speed * -1
-            enemy_y[i] += enemy_y_change[i]
-
-        # Enemy reaches the bottom of the screen, respawn the enemy and deduct 50 points
-        if enemy_y[i] >= (screen_y - enemy_sprite_dim):
-            enemy_x[i] = random.randint(0, screen_x - 64)
-            enemy_y[i] = 30
-            player_health -= 1
-            player_score -= 50
-
-
-    for i in range(enemy_count):
-        # Collider Checks
-        shotCollided = collision.has_collided(enemy_x[i], enemy_y[i], shot_x, shot_y)
-        enemyShotCollided = collision.has_collided(player_x, player_y, enemy_shot_x, enemy_shot_y)
-        playerCollided = collision.has_collided(enemy_x[i], enemy_y[i], player_x, player_y)
-        if shotCollided and shot_fired:
+        # Shot Movement
+        if shot_fired:
+            shot_y -= shot_speed
+            shot(shot_x, shot_y)
+            if shot_y <= -20:
+                shot_fired = False
+        else:
+            shot_x = player_x
             shot_y = player_y
-            shot_fired = False
-            player_score += 100
-                respawn_enemy(i)
-            enemy_y[i] = 30
 
-        if playerCollided or enemyShotCollided:
-            if enemyShotCollided:
+        # Enemy Shot Fired
+        if enemy_shot_fired:
+            enemy_shot_y += enemy_shot_speed
+            enemy_shot(enemy_shot_x, enemy_shot_y)
+            if enemy_shot_y > screen_y:
                 enemy_shot_fired = False
-                enemy_shot_y = 30
-            player_health -= 1
-            player_x = 370
-            player_y = 480
-            if player_health <= 0:
-                player_health = 5
-                player_last_score = player_score
-                player_score = 0
+                player_score += 10
+
+        # Enemy movement
+        for i in range(enemy_count):
+            if random.randint(1, 100) > 90:
+                fire_enemy_shot(i)
+
+            enemy_x[i] += enemy_x_change[i]
+            if enemy_x[i] <= 0:
+                enemy_x_change[i] = enemy_speed
+                enemy_y[i] += enemy_y_change[i]
+            elif enemy_x[i] >= screen_x - enemy_sprite_dim:
+                enemy_x_change[i] = enemy_speed * -1
+                enemy_y[i] += enemy_y_change[i]
+
+            # Enemy reaches the bottom of the screen, respawn the enemy and deduct 50 points
+            if enemy_y[i] >= (screen_y - enemy_sprite_dim):
+                enemy_x[i] = random.randint(0, screen_x - 64)
+                enemy_y[i] = 30
+                player_health -= 1
+                player_score -= 50
+
+        for i in range(enemy_count):
+            # Collider Checks
+            shotCollided = collision.has_collided(enemy_x[i], enemy_y[i], shot_x, shot_y)
+            enemyShotCollided = collision.has_collided(player_x, player_y, enemy_shot_x, enemy_shot_y)
+            playerCollided = collision.has_collided(enemy_x[i], enemy_y[i], player_x, player_y)
+            if shotCollided and shot_fired:
+                shot_y = player_y
+                shot_fired = False
+                player_score += 100
+                respawn_enemy(i)
+
+            if playerCollided or enemyShotCollided:
+                if enemyShotCollided:
+                    enemy_shot_fired = False
+                    enemy_shot_y = 30
+                player_health -= 1
+                player_x = 370
+                player_y = 480
+                if player_health <= 0:
+                    game_started = False
+                    player_health = 5
+                    player_last_score = player_score
+                    player_score = 0
                     respawn_all_enemies()
 
-        enemy(enemy_x[i], enemy_y[i], i)
+            enemy(enemy_x[i], enemy_y[i], i)
 
-    for i in range(player_health):
-        update_health(health_pos_x[i], health_pos_y[i])
+        for i in range(player_health):
+            update_health(health_pos_x[i], health_pos_y[i])
 
-    player(player_x, player_y)
-    update_score(score_text_X, score_text_y)
+        player(player_x, player_y)
+        update_score(score_text_X, score_text_y)
+
     pygame.display.update()
