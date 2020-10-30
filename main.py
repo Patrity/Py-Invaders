@@ -1,10 +1,12 @@
 import pygame
+import pygame_textinput
 import random
 import collision
 import math
 
 # Init the PyGame
 pygame.init()
+input = pygame_textinput.TextInput("Player Name")
 clock = pygame.time.Clock()
 game_started = False
 
@@ -31,6 +33,7 @@ player_x = 370
 player_y = 480
 playerX_Change = 0
 playerY_Change = 0
+player_name = "player"
 
 # Player attributes
 player_move_speed = 10
@@ -129,8 +132,10 @@ def player_dead(x, y, ticks):
 def update_score(x, y):
     score = font.render("Score: " + str(player_score), True, (255, 255, 0))
     last_score = font.render("Previous Score: " + str(player_last_score), True, (255, 255, 0))
+    name_text = font.render("Name: " + player_name, True, (255, 255, 0))
     screen.blit(score, (x, y))
     screen.blit(last_score, (x, y + 29))
+    screen.blit(name_text, (x, y + 58))
 
 
 def update_health(x, y):
@@ -163,7 +168,8 @@ while running:
     screen.fill((0, 0, 32))
     screen.blit(background, (0, 0))
 
-    for event in pygame.event.get():
+    events = pygame.event.get()
+    for event in events:
         # Game exit functionality
         if event.type == pygame.QUIT:
             running = False
@@ -176,7 +182,7 @@ while running:
         # Game Controls
         elif game_started:
             if event.type == pygame.KEYDOWN:
-                if event.type == pygame.K_r:
+                if event.type == pygame.K_ESCAPE:
                     game_started = False
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     playerX_Change -= player_move_speed
@@ -209,9 +215,17 @@ while running:
         screen.blit(start_button, (150, 400))
         if player_last_score > 0:
             last_score_text = font.render("Game Over!", True, (255, 255, 0))
-            screen.blit(last_score_text, (315, screen_y / 2 - 80))
+            screen.blit(last_score_text, (320, screen_y / 2 - 90))
             last_score_text = font.render("Previous Score: " + str(player_last_score), True, (255, 255, 0))
-            screen.blit(last_score_text, (275, screen_y / 2 - 50))
+            screen.blit(last_score_text, (280, screen_y / 2 - 60))
+
+        enter_name_text = font.render("Enter Name: ", True, (255, 255, 0))
+        screen.blit(enter_name_text, (330, screen_y / 2 + 25))
+        pygame.draw.rect(screen, (255, 255, 255), (300, screen_y / 2 + 55, 200, 30))
+        screen.blit(input.get_surface(), (300, screen_y / 2 + 60))
+        if input.update(events):
+            game_started = True
+        player_name = input.get_text()
 
 
     else:
