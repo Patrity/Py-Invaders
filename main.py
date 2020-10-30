@@ -5,6 +5,7 @@ import math
 
 # Init the PyGame
 pygame.init()
+clock = pygame.time.Clock()
 game_started = False
 
 # Define the screen
@@ -32,7 +33,7 @@ playerX_Change = 0
 playerY_Change = 0
 
 # Player attributes
-player_move_speed = 1
+player_move_speed = 10
 player_sprite_dim = 64
 player_health = 5
 player_kills = 0
@@ -55,7 +56,7 @@ double_shot_img = pygame.image.load('resources/doubleshot.png')
 triple_shot_img = pygame.image.load('resources/tripleshot.png')
 shot_x = 0
 shot_y = 0
-shot_speed = 3
+shot_speed = 30
 shot_fired = False
 
 # Define Enemies
@@ -67,7 +68,7 @@ enemy_y_change = []
 
 # Enemy Attributes
 enemy_count = 6
-enemy_speed = 0.75
+enemy_speed = 7.5
 enemy_sprite_dim = 64
 enemy_dead_img = pygame.image.load('resources/enemydead.png')
 
@@ -75,7 +76,7 @@ enemy_dead_img = pygame.image.load('resources/enemydead.png')
 enemy_shot_img = pygame.image.load('resources/enemyshot.png')
 enemy_shot_x = 0
 enemy_shot_y = 0
-enemy_shot_speed = 2
+enemy_shot_speed = 15
 enemy_shot_fired = False
 
 for i in range(enemy_count):
@@ -161,6 +162,7 @@ running = True
 while running:
     screen.fill((0, 0, 32))
     screen.blit(background, (0, 0))
+
     for event in pygame.event.get():
         # Game exit functionality
         if event.type == pygame.QUIT:
@@ -168,7 +170,9 @@ while running:
         # Start Game
         if not game_started:
             if event.type == pygame.MOUSEBUTTONDOWN:
-                game_started = True
+                click_x, click_y = event.pos
+                if 277 < click_x < 520 and 435 < click_y < 510:
+                    game_started = True
         # Game Controls
         elif game_started:
             if event.type == pygame.KEYDOWN:
@@ -203,6 +207,12 @@ while running:
     if not game_started:
         screen.blit(banner, (150, 50))
         screen.blit(start_button, (150, 400))
+        if player_last_score > 0:
+            last_score_text = font.render("Game Over!", True, (255, 255, 0))
+            screen.blit(last_score_text, (315, screen_y / 2 - 80))
+            last_score_text = font.render("Previous Score: " + str(player_last_score), True, (255, 255, 0))
+            screen.blit(last_score_text, (275, screen_y / 2 - 50))
+
 
     else:
         # Player movement
@@ -283,3 +293,4 @@ while running:
         update_score(score_text_X, score_text_y)
 
     pygame.display.update()
+    clock.tick(30)
