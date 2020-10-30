@@ -16,6 +16,8 @@ pygame.display.set_caption("Space Invaders")
 icon = pygame.image.load('resources/spaceship.png')
 pygame.display.set_icon(icon)
 font = pygame.font.Font('freesansbold.ttf', 24)
+banner = pygame.image.load('resources/banner.png')
+start_button = pygame.image.load('resources/start.png')
 
 score_text_X = 5
 score_text_y = 5
@@ -199,8 +201,8 @@ while running:
                     playerY_Change = 0
 
     if not game_started:
-        start_text = font.render("Click Anywhere To Start!", True, (255, 255, 0))
-        screen.blit(start_text, (250, screen_y / 2 - 100))
+        screen.blit(banner, (150, 50))
+        screen.blit(start_button, (150, 400))
 
     else:
         # Player movement
