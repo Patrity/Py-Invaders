@@ -312,6 +312,7 @@ while running:
                     player_last_score = player_score
                     player_score = 0
                     respawn_all_enemies()
+                    highscores.post(player_name, player_last_score)
 
             enemy(enemy_x[i], enemy_y[i], i)
 
