@@ -1,8 +1,12 @@
 import pygame
+from enum import IntEnum
+
+import json
 import pygame_textinput
 import random
 import collision
 import math
+import highscores
 
 # Init the PyGame
 pygame.init()
@@ -21,6 +25,8 @@ pygame.display.set_icon(icon)
 font = pygame.font.Font('freesansbold.ttf', 24)
 banner = pygame.image.load('resources/banner.png')
 start_button = pygame.image.load('resources/start.png')
+high_score_button = pygame.image.load('resources/trophy.png')
+github_buttom = pygame.image.load('resources/github.png')
 
 score_text_X = 5
 score_text_y = 5
@@ -162,8 +168,15 @@ def fire_enemy_shot(i):
         enemy_shot(math.ceil(enemy_shot_x), math.ceil(enemy_shot_y))
 
 
+class GameState(IntEnum):
+    PREGAME = 1
+    HIGHSCORES = 2
+    GAME = 3
+
+
 # Main game loop
 running = True
+game_state = GameState.PREGAME
 while running:
     screen.fill((0, 0, 32))
     screen.blit(background, (0, 0))
@@ -174,16 +187,16 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         # Start Game
-        if not game_started:
+        if game_state == GameState.PREGAME:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 click_x, click_y = event.pos
                 if 277 < click_x < 520 and 435 < click_y < 510:
-                    game_started = True
+                    game_state = GameState.GAME
         # Game Controls
-        elif game_started:
+        elif game_state == GameState.GAME:
             if event.type == pygame.KEYDOWN:
                 if event.type == pygame.K_ESCAPE:
-                    game_started = False
+                    game_state == GameState.PREGAME
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     playerX_Change -= player_move_speed
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
@@ -210,7 +223,7 @@ while running:
                 if event.key == pygame.K_UP or event.key == pygame.K_DOWN or event.key == pygame.K_w or event.key == pygame.K_s:
                     playerY_Change = 0
 
-    if not game_started:
+    if game_state == GameState.PREGAME:
         screen.blit(banner, (150, 50))
         screen.blit(start_button, (150, 400))
         if player_last_score > 0:
@@ -223,12 +236,14 @@ while running:
         screen.blit(enter_name_text, (330, screen_y / 2 + 25))
         pygame.draw.rect(screen, (255, 255, 255), (300, screen_y / 2 + 55, 200, 30))
         screen.blit(input.get_surface(), (300, screen_y / 2 + 60))
+        screen.blit(high_score_button, (700, 500))
         if input.update(events):
-            game_started = True
+            game_state = GameState.GAME
         player_name = input.get_text()
 
 
     else:
+    elif game_state == GameState.GAME:
         # Player movement
         if not player_x + playerX_Change >= screen_x - player_sprite_dim and not player_x + playerX_Change < 0:
             player_x += playerX_Change
@@ -292,7 +307,7 @@ while running:
                 player_x = 370
                 player_y = 480
                 if player_health <= 0:
-                    game_started = False
+                    game_state = GameState.PREGAME
                     player_health = 5
                     player_last_score = player_score
                     player_score = 0
