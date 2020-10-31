@@ -7,6 +7,7 @@ import random
 import collision
 import math
 import highscores
+import webbrowser
 
 # Init the PyGame
 pygame.init()
@@ -50,7 +51,7 @@ player_kills = 0
 player_score = 0
 player_last_score = 0
 fire_mode = 1
-
+scores_loaded = False
 health_pos_x = []
 health_pos_y = []
 
@@ -193,8 +194,17 @@ while running:
                 click_x, click_y = event.pos
                 if 277 < click_x < 520 and 435 < click_y < 510:
                     game_state = GameState.GAME
+                if 500 < click_y < 564 and 700 < click_x < 764:
+                    game_state = GameState.HIGHSCORES
                 if 400 < click_y < 464 and 700 < click_x < 764:
                     webbrowser.open("https://github.com/Patrity/Py-Invaders")
+
+        elif game_state == GameState.HIGHSCORES:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                click_x, click_y = event.pos
+                if 500 < click_y < 546 and 700 < click_x < 764:
+                    game_state = GameState.PREGAME
+
         # Game Controls
         elif game_state == GameState.GAME:
             if event.type == pygame.KEYDOWN:
@@ -245,8 +255,38 @@ while running:
             game_state = GameState.GAME
         player_name = input.get_text()
 
+    if game_state == GameState.HIGHSCORES:
+        if not scores_loaded:
+            players = highscores.get()
+            scores_loaded = True
+            print(players.json())
+            scores_list = [];
+            for index, item in enumerate(players.json(), start=1):
+                scores_list.append(str(index) + ". " + item["name"] + " - " + str(item["score"]))
 
-    else:
+        first_place = font.render(scores_list[0], True, (255, 255, 0))
+        second_place = font.render(scores_list[1], True, (255, 255, 0))
+        third_place = font.render(scores_list[2], True, (255, 255, 0))
+        fourth_place = font.render(scores_list[3], True, (255, 255, 0))
+        fifth_place = font.render(scores_list[4], True, (255, 255, 0))
+        sixth_place = font.render(scores_list[5], True, (255, 255, 0))
+        seventh_place = font.render(scores_list[6], True, (255, 255, 0))
+        eighth_place = font.render(scores_list[7], True, (255, 255, 0))
+        ninth_place = font.render(scores_list[8], True, (255, 255, 0))
+        tenth_place = font.render(scores_list[9], True, (255, 255, 0))
+
+        screen.blit(first_place, (100, 100))
+        screen.blit(second_place, (100, 130))
+        screen.blit(third_place, (100, 160))
+        screen.blit(fourth_place, (100, 190))
+        screen.blit(fifth_place, (100, 220))
+        screen.blit(sixth_place, (100, 250))
+        screen.blit(seventh_place, (100, 280))
+        screen.blit(eighth_place, (100, 310))
+        screen.blit(ninth_place, (100, 340))
+        screen.blit(tenth_place, (100, 370))
+        screen.blit(back_button, (700, 500))
+
     elif game_state == GameState.GAME:
         # Player movement
         if not player_x + playerX_Change >= screen_x - player_sprite_dim and not player_x + playerX_Change < 0:
