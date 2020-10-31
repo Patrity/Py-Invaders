@@ -1,5 +1,11 @@
 # Py Invaders
- This project was created as my first learning experience with Python.
+ This project was created as my first learning experience with Python.\
+ It is a recreation with some tweaks of the classic game, "Space Invaders"\
+ The game features a full highscores system as well that is written in Java using the Spring Library\
+ https://github.com/Patrity/py-api
+ 
+ 10/30/2020
+  - Added requests to submit and get top 10 highschores from an API written in Java with spring. Backend here here: https://github.com/Patrity/py-api
  
  ##Controls:
  WASD/Arrow Keys for movement\
@@ -15,14 +21,15 @@
  ##TODO:
  * Sprite swap for player and enemy death
  * Add a pause with a 3 second immunity after the player takes damage
- * Proper game over screen with a button to restart
  
 ##Credits
 The outline of this project came from the Youtube channel 'freeCodeCamp.org'\
 https://www.youtube.com/watch?v=FfWpgLFMI7w \
-Player sprite and enemy sprites were sourced from 'Flat Icon'\
+Most sprites were sourced from 'Flat Icon'\
 https://www.flaticon.com/ \
-All other sprites were created by myself and are free for anyone to use.
+bullet sprites and title sprites were created by myself and are free for anyone to use.
 
 ##Media
 <img src="https://i.imgur.com/Pt4Vm6i.png">
+<img src="https://i.imgur.com/XDnEdpM.png">
+<img src="https://i.imgur.com/jJeNqQq.png">
