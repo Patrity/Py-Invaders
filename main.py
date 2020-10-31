@@ -26,7 +26,8 @@ font = pygame.font.Font('freesansbold.ttf', 24)
 banner = pygame.image.load('resources/banner.png')
 start_button = pygame.image.load('resources/start.png')
 high_score_button = pygame.image.load('resources/trophy.png')
-github_buttom = pygame.image.load('resources/github.png')
+github_button = pygame.image.load('resources/github.png')
+back_button = pygame.image.load('resources/back.png')
 
 score_text_X = 5
 score_text_y = 5
@@ -192,6 +193,8 @@ while running:
                 click_x, click_y = event.pos
                 if 277 < click_x < 520 and 435 < click_y < 510:
                     game_state = GameState.GAME
+                if 400 < click_y < 464 and 700 < click_x < 764:
+                    webbrowser.open("https://github.com/Patrity/Py-Invaders")
         # Game Controls
         elif game_state == GameState.GAME:
             if event.type == pygame.KEYDOWN:
@@ -237,6 +240,7 @@ while running:
         pygame.draw.rect(screen, (255, 255, 255), (300, screen_y / 2 + 55, 200, 30))
         screen.blit(input.get_surface(), (300, screen_y / 2 + 60))
         screen.blit(high_score_button, (700, 500))
+        screen.blit(github_button, (700, 400))
         if input.update(events):
             game_state = GameState.GAME
         player_name = input.get_text()
